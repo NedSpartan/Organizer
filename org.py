@@ -11,14 +11,14 @@ class Mover:
 
         self.source = ''
         
-        # Checks to see what os is running and sets the path appropriately
+        # Checks to see what os is running and sets the source path appropriately
 
         if platform == "linux":
 
             self.source = os.listdir(f'/home/{os.getlogin()}/Downloads')
 
             paths = [
-                'Pictures','Movies','Documents','Games'
+                'Pictures','Movies','Documents','Games','Applications'
             ]
 
             count = 0
@@ -40,7 +40,7 @@ class Mover:
             self.source = os.listdir(f'C:\\Users\\{os.getlogin()}\\Downloads\\')
 
             paths = [
-                'Pictures','Movies','Documents','Games'
+                'Pictures','Movies','Documents','Games','Applications'
             ]
 
             count = 0
@@ -62,8 +62,10 @@ class Mover:
             self.source = os.listdir(f'/home/{os.getlogin()}/Downloads')
 
             paths = [
-                'Pictures','Movies','Documents','Games'
+                'Pictures','Movies','Documents','Games','Applications '
             ]
+            
+            # Checks to see if destination folders exist in the downloads folder and if not creates them. 
 
             count = 0
 
@@ -79,14 +81,6 @@ class Mover:
 
                     count += 1
 
-
-        # List of possible destinations
-
-        self.jpg = 0
-        self.zip = 0
-        self.iso = 0
-        self.rar = 0
-        self.png = 0
         self.file_totals = 0
 
     def mover(self):
@@ -97,11 +91,7 @@ class Mover:
 
             result = self.source[count].split('.')
 
-            # Remove before production prints the split results of all the files in the directory
-            
-            print(result[-1])
-
-            def osChecker(fileType):
+            def move(fileType):
 
                 if platform == 'linux':
 
@@ -123,93 +113,64 @@ class Mover:
                     destination = f'/home/{os.getlogin()}/Downloads/{fileType}/{self.source[count]}'
 
                     shutil.move(source, destination)
+            
+            #Different extensions endings after split should go in this list
 
-            if result[-1] == 'jpg':
+            self.extensionsApplications = [
+                'deb','exe','dmg','zip','7zip','rar','32','64','flatpakref'
+            ]
 
-                self.jpg += 1
-                self.file_totals += 1
-                
-                osChecker('Pictures')
+            self.extensionsPictures = [
+                'jpeg','png','gif','pdf','eps','ai','psd','tiff','raw','jpg','kdc','pcd','dcr','dcs','hdp',
+            ]
 
-                count += 1
+            self.extensionsDocuments = [
+                'doc','docx','html','css','c','py','blend','js','ps','indd'
+            ]
 
-            elif result[-1] == 'jpeg':
+            self.extensionsMovies = [
+                'mpeg','divx','mp4','mkv','flak','flv'
+            ]
 
-                osChecker('Pictures')
+            # Logic to determine where the the files are moved to
 
-                count += 1
+            if result[-1] in self.extensionsApplications:
 
-            elif result[-1] == 'zip':
-
-                self.zip += 1
-                self.file_totals += 1
-
-                osChecker('Games')
-                
-                count += 1
-
-            elif result[-1] == 'rar':
-
-                self.rar += 1
-                self.file_totals += 1
-
-                osChecker('Games')
-                
-                count += 1
-
-            elif result[-1] == 'iso':
-
-                self.iso += 1
-                self.file_totals += 1
-
-                osChecker('Games')
+                move('Applications')
 
                 count += 1
 
-            elif result[-1] == 'png':
+            elif result[-1] in self.extensionsPictures:
 
-                self.png += 1
-                self.file_totals += 1
-
-                osChecker('Pictures')
+                move('Pictures')
 
                 count += 1
 
-            elif result[-1] == 'csv':
+            elif result[-1] in self.extensionsDocuments:
 
-                osChecker('Documents')
-
-                count += 1
-
-            elif result[-1] == 'SRT':
-
-                osChecker('Movies')
+                move('Documents')
 
                 count += 1
 
-            elif result[-1] == 'AC3-EVO':
+            elif result[-1] in self.extensionsMovies:
 
-                osChecker('Movies')
-
-                count += 1
-
-            elif result[-1] == 'XviD-EVO':
-
-                osChecker('Movies')
+                move('Movies')
 
                 count += 1
 
             else:
+
                 self.file_totals += 1
+
                 count += 1
+
+                print(result[-1])
+
 
 # Remove before production
 test = Mover()
 test.mover()
 
 print(test.source)
-print(test.jpg)
-print(test.zip)
-print(test.rar)
-print(test.png)
+
 print(test.file_totals)
