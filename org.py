@@ -114,7 +114,7 @@ class Mover:
 
                     shutil.move(source, destination)
             
-            #Different extensions endings after split should go in this list
+            # Different extensions endings after split should go in this list
 
             self.extensionsApplications = [
                 'deb','exe','dmg','zip','7zip','rar','32','64','flatpakref'
@@ -122,10 +122,12 @@ class Mover:
 
             self.extensionsPictures = [
                 'jpeg','png','gif','pdf','eps','ai','psd','tiff','raw','jpg','kdc','pcd','dcr','dcs','hdp',
+                'bmp'
             ]
 
             self.extensionsDocuments = [
-                'doc','docx','html','css','c','py','blend','js','ps','indd'
+                'doc','docx','html','css','c','py','blend','js','ps','indd','xps','dwf','dwfx','xls','xlsx',
+                'txt'
             ]
 
             self.extensionsMovies = [
@@ -166,11 +168,10 @@ class Mover:
 
                 print(result[-1])
 
+if __name__ == '__main__':
 
-# Remove before production
-test = Mover()
-test.mover()
+    mover = Mover()
 
-print(test.source)
+    mover.mover()
 
-print(test.file_totals)
+    print(mover.file_totals)
