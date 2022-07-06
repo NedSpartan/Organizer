@@ -91,6 +91,8 @@ class Mover:
 
             result = self.source[count].split('.')
 
+            space_seperated_result = self.source[count].split(' ')
+
             def move(fileType):
 
                 if platform == 'linux':
@@ -117,7 +119,7 @@ class Mover:
             # Different extensions endings after split should go in this list
 
             self.extensionsApplications = [
-                'deb','exe','dmg','zip','7zip','rar','32','64','flatpakref'
+                'deb','exe','dmg','zip','7zip','rar','32','64','flatpakref','bin'
             ]
 
             self.extensionsPictures = [
@@ -131,8 +133,55 @@ class Mover:
             ]
 
             self.extensionsMovies = [
-                'mpeg','divx','mp4','mkv','flak','flv'
+                'mpeg', 'divx', 'mp4', 'mkv', 'flak', 'flv', 'H264-GLHF[TGx]', 'x264-MP4', '264-EVO[TGx]'
             ]
+
+            # Final stage check to see if the file is a movie
+
+            def finalMovieChecker():
+
+                movie_count = 0
+
+                movie_possibilities = [
+                    '264', 'x264', 'xvid', '1080', '1080p', '[1080]', '[1080p]', 'BluRay', 'WEBRip', '[WEBRip]', 'H264', 'XViD-ETRG'
+                ]
+
+                for i in space_seperated_result:
+
+                    if space_seperated_result[movie_count] in movie_possibilities:
+
+                        move('Movies')
+
+                        movie_count += 1
+
+                    else:
+
+                        movie_count += 1
+
+            # Final stage check to see if the file is a game
+
+            def finalGameChecker():
+
+                game_count = 0
+
+                game_possibilities = [
+                    'psx', 'PSX', '(PSX)', '(U)', '(J)', '(E)', 'snes', 'SNES', 'genesis', 'NTSC', 'NTSC-U',
+                    'rom', 'ROM', 'JUE', '(JUE)', '(Unl)', '(World)', '[c]', '(UEJ)', '(A)', '(Europe)', '(JU)',
+                    '(Fre)', '(1)', '[b1]', '(UJE)', '32X', '[BIOS]', '(Virtual Console)', '(C)', '(R)', '(A)',
+                    '(Sega Smash Pack)', '(S)', ''
+                ]
+
+                for i in space_seperated_result:
+
+                    if space_seperated_result[game_count] in game_possibilities:
+
+                        move('Games')
+
+                        game_count += 1
+
+                    else:
+
+                        game_count += 1
 
             # Logic to determine where the the files are moved to
 
@@ -162,16 +211,14 @@ class Mover:
 
             else:
 
-                self.file_totals += 1
+                finalMovieChecker()
+
+                finalGameChecker()
 
                 count += 1
-
-                print(result[-1])
 
 if __name__ == '__main__':
 
     mover = Mover()
 
     mover.mover()
-
-    print(mover.file_totals)
